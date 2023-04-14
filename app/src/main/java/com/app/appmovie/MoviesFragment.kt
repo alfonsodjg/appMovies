@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.appmovie.adapter.MovieAdapterNow
@@ -41,8 +42,7 @@ class MoviesFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentMoviesBinding
-    private lateinit var adapter: MoviesAdapter
-    private lateinit var originalMovies: List<MoviesTop>
+    private lateinit var moviesAdapter: MoviesAdapter
     @SuppressLint("NotifyDataSetChanged")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,13 +54,24 @@ class MoviesFragment : Fragment() {
 
         moviesTop()
         moviesNow()
+        binding.svMovies.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String): Boolean {
+                filterMoviesTop(p0)
+                filterMoviesNow(p0)
+                return true
+            }
+        })
         return binding.root
     }
     @SuppressLint("NotifyDataSetChanged")
     private fun moviesTop(){
         binding.rvMovies.layoutManager=LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
 
-        val moviesAdapter= MoviesAdapter(emptyList())
+         moviesAdapter= MoviesAdapter(emptyList())
         {
             navigationTop(it)
 
@@ -71,6 +82,7 @@ class MoviesFragment : Fragment() {
             val api_key=getString(R.string.api_key)
             val moviesTop= ApiClient.service.listTopMovies(api_key)
             moviesAdapter.movies=moviesTop.results
+            moviesAdapter.filteredList=moviesTop.results
             moviesAdapter.notifyDataSetChanged()
         }
     }
@@ -81,12 +93,26 @@ class MoviesFragment : Fragment() {
             navigationNow(it)
         }
         binding.rvMoviesNow.adapter=adapter
+
         lifecycleScope.launch {
             val api_key=getString(R.string.api_key)
             val moviesNow= ApiClient.service.listNowMovies(api_key)
             adapter.moviesNow=moviesNow.results
+            adapter.filerterMoviesNow=moviesNow.results
             adapter.notifyDataSetChanged()
         }
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun filterMoviesTop(text:String){
+        val adapterTop=binding.rvMovies.adapter as MoviesAdapter?
+        adapterTop?.filter?.filter(text)
+        adapterTop?.notifyDataSetChanged()
+    }
+    @SuppressLint("NotifyDataSetChanged")
+    private fun filterMoviesNow(text: String){
+        val adapterNow=binding.rvMoviesNow.adapter as MovieAdapterNow?
+        adapterNow?.filter?.filter(text)
+        adapterNow?.notifyDataSetChanged()
     }
     private fun navigationTop(movie:MoviesTop){
         val i=Intent(context,DetailsActivity::class.java)
