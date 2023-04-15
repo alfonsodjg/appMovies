@@ -5,4 +5,5 @@
     <string name="tvMoviesPlaying">Movies now playing</string>
     <string name="tvTopMovies">Top Movies</string>
     <string name="Resume">Resume</string>
+    <string name="tvErrrorNetwork">Error network not adviable</string>
 </resources>

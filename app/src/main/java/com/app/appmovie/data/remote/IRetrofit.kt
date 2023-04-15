@@ -1,4 +1,4 @@
-package com.app.appmovie.utils
+package com.app.appmovie.data.remote
 
 import com.app.appmovie.models.MovieTopDbResult
 import com.app.appmovie.models.MoviesResultNow

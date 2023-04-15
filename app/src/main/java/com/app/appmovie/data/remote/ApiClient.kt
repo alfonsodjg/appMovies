@@ -1,4 +1,4 @@
-package com.app.appmovie.utils
+package com.app.appmovie.data.remote
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
