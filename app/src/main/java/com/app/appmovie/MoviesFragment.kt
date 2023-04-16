@@ -5,11 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
-import android.view.Gravity
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.SearchView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
@@ -57,12 +54,12 @@ class MoviesFragment : Fragment() {
         // Inflate the layout for this fragment
         binding= FragmentMoviesBinding.inflate(inflater, container, false)
 
-
         sharedPreferencesManager=SharedPreferencesManager(requireContext())
         if(context?.let { checkConnection(it) } == true){
             moviesTop()
             moviesNow()
             //SearchView con su evento que escucha cuando se escribe dentro de ella
+            binding.svMovies.isFocusable=false//funcion que hace que el teclado no se inicialice automaticamente
             binding.svMovies.setOnQueryTextListener(object : SearchView.OnQueryTextListener{
                 override fun onQueryTextSubmit(p0: String?): Boolean {
                     return false
@@ -80,6 +77,7 @@ class MoviesFragment : Fragment() {
             binding.tvMoviesNow.visibility=View.GONE
             binding.rvMovies.visibility=View.GONE
             binding.rvMoviesNow.visibility=View.GONE
+            Toast.makeText(context,"Error, virifica conexion a internet cierre y vuelva abrir la aplicacion",Toast.LENGTH_LONG).show()
         }
 
         return binding.root
